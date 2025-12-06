@@ -1,0 +1,22 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../bookshop"
+		},
+		{
+			"path": "../car"
+		},
+		{
+			"path": "../flowers"
+		},
+		{
+			"path": "../raritet"
+		},
+		{
+			"path": "../testproject"
+		}
+	]
+}
