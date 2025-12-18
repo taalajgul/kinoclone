@@ -198,6 +198,11 @@
         <span>KinoClone</span>
       </a>
 
+      <nav class="nav-links">
+        <a href="{% url 'login_view' %}" class="btn">Вход</a>
+        <a href="{% url 'register_view' %}" class="btn">Регистрация</a>
+      </nav>
+
       <!-- <nav class="nav-links" aria-label="Основная навигация">
         <a href="#" class="active">Главная</a>
         <a href="#">Фильмы</a>
@@ -235,7 +240,7 @@
             {% endfor %}
             
             <span class="rating" aria-label="Рейтинг 8.4">
-              ⭐ 8.4
+              {{ movie.calculate_rating }}
             </span>
           </div>
           <div class="title-xl">{{ movie.title }}</div>
@@ -244,7 +249,14 @@
           </div>
           <div class="hero-actions">
             <a href="{{ movie.trailer_url }}" class="btn btn--accent">▶️ Смотрите трейлер</a>
-            <a href="#" class="btn" title="Добавить в избранное">♡ В избранное</a>
+            
+            <form action="" method="post">
+             {% csrf_token %}
+             <input type="text" value="{{ movie.id }}" hidden name="movie_id">
+              <button type="submit"  class="btn" title="Добавить в избранное">♡</button>
+            </form>
+            
+
           </div>
         </div>
       </article>

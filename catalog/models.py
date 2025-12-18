@@ -84,6 +84,20 @@ class Review(models.Model):
     def __str__(self):
         return f"{self.user.username} поставил оценку {self.rating} на фильм {self.movie.title} ({self.movie.date_of_release})"
 
+class FavoriteMovie(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='favorites')
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    
+
+    def __str__(self):
+        return f"{ self.user.username} добавил в избранное фильм '{self.movie.title}'"
+
+class Premiere(models.Model):
+    movie = models.OneToOneField(Movie, on_delete=models.CASCADE)
+    date_time = models.DateTimeField()
+
+    def __str__(self):
+        return f'Премьера фильма "{self.movie.title}" на дату {self.date_time}'
 
 
 

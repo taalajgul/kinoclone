@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Регистрация — KinoClone</title>
+  <meta name="description" content="Страница регистрации пользователя — только верстка и фронт-валидация" />
+  <style>
+    :root{
+      --bg:#0b0f17; --bg-soft:#0f1624; --glass:rgba(243, 14, 14, 0.04);
+      --text:#ebf2ff; --text-dim:#b6c3da; --accent:#ff8a00; --radius:16px; --border:1px solid rgba(255,255,255,.06);
+      --card-w:420px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font:400 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", Arial;
+      background: radial-gradient(1200px 800px at 10% -10%, rgba(230, 142, 43, 0.08), transparent 50%),
+                  radial-gradient(1000px 600px at 90% 10%, rgba(26, 169, 212, 0.06), transparent 50%),
+                  var(--bg); color:var(--text); -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+      display:flex; align-items:center; justify-content:center; padding:32px;
+    }
+
+    .panel{
+      width:100%; max-width:var(--card-w); background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01));
+      border-radius:var(--radius); padding:28px; border:var(--border); box-shadow:0 12px 30px rgba(2,6,23,.6);
+      backdrop-filter: blur(6px) saturate(120%);
+    }
+
+    .brand{display:flex; gap:12px; align-items:center; margin-bottom:8px}
+    .logo-badge{width:44px; height:44px; border-radius:10px; display:grid; place-items:center; background:linear-gradient(135deg,var(--accent),#ff5e00); box-shadow:0 8px 24px rgba(0,0,0,.45)}
+    .logo-badge svg{width:22px;height:22px;fill:#0b0f17}
+    .brand h1{font-size:18px;margin:0;font-weight:800}
+    .brand p{margin:0;color:var(--text-dim); font-size:13px}
+
+    h2{margin:16px 0 6px; font-size:20px}
+    .muted{color:var(--text-dim); margin-bottom:18px}
+
+    form{display:grid; gap:12px}
+
+    .field{display:flex; flex-direction:column; gap:6px}
+    label{font-weight:600; font-size:13px}
+    input[type="text"], input[type="password"]{
+      width:100%; padding:12px 14px; border-radius:12px; background:var(--glass); border:var(--border); color:var(--text);
+      outline:none; font-size:15px;
+    }
+    input::placeholder{color:rgba(255,255,255,.22)}
+
+    .row{display:flex; gap:10px}
+    .half{flex:1}
+
+    .hint{font-size:13px; color:var(--text-dim)}
+
+    .pass-strength{
+      height:8px; border-radius:999px; background:rgba(255,255,255,.04); overflow:hidden; margin-top:6px;
+    }
+    .pass-strength > i{display:block; height:100%; width:0%; transition:width .25s ease}
+
+    .controls{display:flex; gap:8px; align-items:center; justify-content:space-between; margin-top:6px}
+
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:12px 14px; border-radius:12px; border:none;
+      background:linear-gradient(135deg,var(--accent),#ff5e00); color:#0b0f17; font-weight:700; cursor:pointer; width:100%;
+    }
+
+    .secondary{background:transparent; border:var(--border); color:var(--text); padding:10px 12px; border-radius:10px}
+
+    .legal{font-size:13px; color:var(--text-dim); text-align:center; margin-top:12px}
+
+    /* small helpers */
+    .error{color:var(--danger, #ff5a7a); font-size:13px}
+    .success{color:#21e18a}
+
+    /* responsive */
+    @media (max-width:480px){ .panel{padding:20px; border-radius:12px} }
+  </style>
+</head>
+<body>
+  <main class="panel" role="main" aria-labelledby="reg-title">
+    <div class="brand">
+      <div class="logo-badge" aria-hidden="true">
+        <svg viewBox="0 0 24 24" role="img"><path d="M3 4h4l1 3h8l1-3h4v16h-4l-1-3H8l-1 3H3V4zm6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+      </div>
+      <div>
+        <h1>KinoClone</h1>
+        <p class="muted">Создайте учётную запись</p>
+      </div>
+    </div>
+
+    <h2 id="reg-title">Регистрация</h2>
+    <p class="muted">Введите удобный логин и надежный пароль. Пароль должен быть не менее 8 символов.</p>
+
+    <form id="regForm" action="" method="post" novalidate>
+    {% csrf_token %}
+      <div class="field">
+        <label for="username">Имя пользователя</label>
+        <input id="username" name="username" type="text" placeholder="например, ivan123" minlength="3" maxlength="30" required autocomplete="username" />
+        <div class="hint" id="loginHint">Можно использовать латиницу, цифры и подчёркивания.</div>
+      </div>
+
+      <div class="field">
+        <label for="password">Пароль</label>
+        <input id="password" name="password" type="password" placeholder="Не менее 8 символов" minlength="8" required autocomplete="new-password" />
+        <div class="pass-strength" aria-hidden="true"><i id="strengthBar" style="background:linear-gradient(90deg,var(--accent),#ff5e00);"></i></div>
+        <div class="controls">
+          <div class="hint">Совет: добавьте цифры и символы.</div>
+          <button type="button" class="secondary" id="togglePwd">Показать</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="confirm">Подтвердите пароль</label>
+        <input id="confirm" name="confirm" type="password" placeholder="Повторите пароль" minlength="8" required autocomplete="new-password" />
+        <div id="matchMsg" class="hint"></div>
+      </div>
+
+      <button class="btn" id="submitBtn" type="submit">Создать аккаунт</button>
+
+      <p class="legal">Нажимая "Создать аккаунт", вы соглашаетесь с <a href="#">правилами сервиса</a>.</p>
+    </form>
+  </main>
+
+  <script>
+    const pwd = document.getElementById('password');
+    const conf = document.getElementById('confirm');
+    const toggle = document.getElementById('togglePwd');
+    const strengthBar = document.getElementById('strengthBar');
+    const matchMsg = document.getElementById('matchMsg');
+    const form = document.getElementById('regForm');
+    const submitBtn = document.getElementById('submitBtn');
+
+    function calcStrength(value){
+      let score = 0;
+      if(value.length >= 8) score += 1;
+      if(/[A-Z]/.test(value)) score += 1;
+      if(/[0-9]/.test(value)) score += 1;
+      if(/[^A-Za-z0-9]/.test(value)) score += 1;
+      return Math.min(score,4);
+    }
+
+    function updateStrength(){
+      const s = calcStrength(pwd.value);
+      const pct = (s/4)*100;
+      strengthBar.style.width = pct + '%';
+      if(s <= 1) strengthBar.style.background = 'linear-gradient(90deg,#ff5a7a,#ff8a00)';
+      else if(s === 2) strengthBar.style.background = 'linear-gradient(90deg,#ffcc00,#ff8a00)';
+      else if(s === 3) strengthBar.style.background = 'linear-gradient(90deg,#21e18a,#6ae3ff)';
+      else strengthBar.style.background = 'linear-gradient(90deg,#21e18a,#00d4ff)';
+    }
+
+    function checkMatch(){
+      if(!conf.value) { matchMsg.textContent = ''; matchMsg.className = 'hint'; return; }
+      if(pwd.value === conf.value){ matchMsg.textContent = 'Пароли совпадают'; matchMsg.className = 'hint success'; }
+      else { matchMsg.textContent = 'Пароли не совпадают'; matchMsg.className = 'hint error'; }
+    }
+
+    pwd.addEventListener('input', ()=>{ updateStrength(); checkMatch(); });
+    conf.addEventListener('input', checkMatch);
+
+    toggle.addEventListener('click', ()=>{
+      const t = pwd.type === 'password' ? 'text' : 'password';
+      pwd.type = t; conf.type = t; toggle.textContent = t === 'text' ? 'Скрыть' : 'Показать';
+    });
+
+    form.addEventListener('submit', (e)=>{
+     
+  </script>
+</body>
+</html>

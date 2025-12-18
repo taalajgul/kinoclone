@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>KinoClone — Избранное</title>
+  <meta name="description" content="Избранные фильмы пользователя — KinoClone" />
+  <link rel="preconnect" href="https://images.unsplash.com" />
+
+  <!-- ===== СТИЛИ — ТЕ ЖЕ САМЫЕ ===== -->
+  <style>
+    :root {
+      --bg: #0b0f17;
+      --bg-soft: #0f1624;
+      --bg-elev: #121a2b;
+      --text: #ebf2ff;
+      --text-dim: #b6c3da;
+      --accent: #ff8a00;
+      --accent-2: #6ae3ff;
+      --radius: 16px;
+      --radius-sm: 10px;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --glass: rgba(255,255,255,.06);
+      --border: 1px solid rgba(255,255,255,.08);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(1200px 800px at 10% -10%, rgba(255,138,0,.12), transparent 50%),
+        radial-gradient(1000px 600px at 90% 10%, rgba(106,227,255,.12), transparent 50%),
+        var(--bg);
+      color: var(--text);
+      font: 400 16px/1.6 system-ui, -apple-system, Segoe UI, Roboto;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+    .container { width: min(1200px, 100% - 32px); margin-inline: auto; }
+
+    /* ===== HEADER ===== */
+    .header {
+      position: sticky; top: 0; z-index: 50;
+      backdrop-filter: blur(10px);
+      background: rgba(11,15,23,.8);
+      border-bottom: var(--border);
+    }
+    .nav {
+      display: flex; align-items: center; gap: 16px; padding: 14px 0;
+    }
+    .logo {
+      display: flex; align-items: center; gap: 10px;
+      font-weight: 800;
+    }
+    .logo-badge {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--accent), #ff5e00);
+      display: grid; place-items: center;
+    }
+    .logo-badge svg { width: 18px; height: 18px; fill: #111; }
+
+    /* ===== USER CARD ===== */
+    .profile-card {
+      margin: 28px 0;
+      padding: 20px;
+      border-radius: var(--radius);
+      background: var(--glass);
+      border: var(--border);
+      display: grid;
+      gap: 10px;
+    }
+
+    .profile-name {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: .3px;
+    }
+
+    .profile-meta {
+      color: var(--text-dim);
+      font-size: 14px;
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .profile-meta span {
+      background: rgba(255,255,255,.06);
+      border: var(--border);
+      border-radius: 999px;
+      padding: 6px 12px;
+    }
+
+    /* ===== SECTION ===== */
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+      margin: 26px 0 14px;
+    }
+    .h2 {
+      font-size: 22px;
+      font-weight: 800;
+    }
+
+    /* ===== GRID CARDS ===== */
+    .grid {
+      display: grid;
+      gap: 14px;
+      grid-template-columns: repeat(2, 1fr);
+    }
+    @media (min-width: 560px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (min-width: 840px) { .grid { grid-template-columns: repeat(4, 1fr); } }
+
+    .card {
+      background: var(--glass);
+      border: var(--border);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      position: relative;
+      transition: transform .25s ease;
+    }
+    .card:hover { transform: translateY(-4px); }
+
+    .poster {
+      aspect-ratio: 2/3;
+      background: #10192c center / cover no-repeat;
+    }
+
+    .card-body {
+      padding: 10px;
+      display: grid;
+      gap: 6px;
+    }
+
+    .title {
+      font-weight: 700;
+      font-size: 14px;
+      line-height: 1.35;
+    }
+
+    .meta {
+      font-size: 12px;
+      color: var(--text-dim);
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .pill {
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.08);
+      border: var(--border);
+    }
+
+    .hover-play {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      background: rgba(0,0,0,0);
+      transition: background .25s;
+    }
+    .card:hover .hover-play {
+      background: rgba(0,0,0,.25);
+    }
+
+    .play-btn {
+      background: #fff;
+      color: #111;
+      font-weight: 800;
+      padding: 10px 14px;
+      border-radius: 999px;
+    }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      margin-top: 40px;
+      padding: 28px 0;
+      border-top: var(--border);
+      color: var(--text-dim);
+      font-size: 13px;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- ===== HEADER ===== -->
+<header class="header">
+  <div class="container nav">
+    <a class="logo" href="#">
+      <span class="logo-badge">
+        <svg viewBox="0 0 24 24"><path d="M3 4h4l1 3h8l1-3h4v16h-4l-1-3H8l-1 3H3z"/></svg>
+      </span>
+      <span>KinoClone</span>
+    </a>
+  </div>
+</header>
+
+<main class="container">
+
+  <!-- ===== USER INFO ===== -->
+  <section class="profile-card">
+    <div class="profile-name">{{ user.username }}</div>
+    <div class="profile-meta">
+      <span>📅 Регистрация:{{ user.date_joined }}</span>
+      
+    </div>
+  </section>
+
+  <!-- ===== FAVORITES ===== -->
+  <section>
+    <div class="section-header">
+      <h2 class="h2">Избранные фильмы</h2>
+    </div>
+
+    <div class="grid">
+      <!-- Карточка фильма -->
+    {% for fav in favorite_movies %}
+    <article class="card">
+        <div class="poster" style="background-image:url('{{ fav.movie.cover.url }}');"></div>
+        <div class="hover-play">
+          <a class="play-btn" href="#">▶ Смотреть</a>
+        </div>
+        <div class="card-body">
+          <div class="title">{{ fav.movie.title }}</div>
+          <div class="meta">
+            <span class="pill">⭐{{ fav.movie.calculate_rating}}</span>
+            <span>{{ fav.movie.date_of_release.year }}</span>
+            {% for genre in fav.movie.genre.all %}
+            <span class="tag"> {{ genre.name }}</span>
+            {% endfor %}
+          </div>
+        </div>
+    </article>
+    {% endfor %}
+
+      
+
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="container">© 2025 KinoClone</div>
+</footer>
+
+</body>
+</html>
